@@ -6,11 +6,6 @@ import re
 import openpyxl
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
-# pd.set_option('display.max_columns', None)
-# pd.set_option("display.max_colwidth", None)
-# import warnings
-# warnings.filterwarnings("ignore")
-#
 
 def clean_iready_read(iready_read, term):
     iready_read.columns = iready_read.columns.str.lower().str.replace(" ", "_")
@@ -165,9 +160,6 @@ def color_growth(val):
         return 'background-color: #434544; color: #434544;'
     
 def color_grade_level(val):
-    # early_grades = ["Gr K", "Gr 1" , "Gr 2", "Gr 3"]
-    # four_grade = ["Early 4", "Mid 4", "Late 4" ]
-    # high_grades = ["Gr 5", "Gr 6", "Gr 7"]
     early_grades = {"Gr K": "#c94d4d", "Gr 1": "#c96969", "Gr 2": "#eb9b9b", "Gr 3":"#faf2b9"}
     four_grade = {"Early 4":"#b4dbb8", "Mid 4":"#7bb582", "Late 4":"#538a5a"}
     high_grades = {"Gr 5":"#aed7fc", "Gr 6":"#83c1f7", "Gr 7":"#377ebd"}
@@ -191,17 +183,6 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
     not_mask = [not x for x in mask]
     grades_col = final_merge_data.columns[not_mask]
     (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
-    
-#
-
-# def main_clean_engineering(data_list, subject):
-#     if subject == "Reading":
-#        final_merge_data = merge_engineer(data_list, subject)
-#        get_colored_spreadsheet(final_merge_data, "iReady_reading_etl.xslx")
-#     else:
-#         final_merge_data = merge_engineer(data_list, subject)
-#         get_colored_spreadsheet(final_merge_data, "iReady_math_etl.xslx")
-
 
 def main_clean_engineering(data_list, subject, full_file_path):
     # FIXED: Adjusted pipeline parameters to accept target destination directory dynamically
