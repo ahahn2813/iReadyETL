@@ -6,7 +6,7 @@ A user-friendly ETL (Extract, Transform, Load) tool that transforms iReady diagn
 
 Teachers use **iReady** for homework assignments and diagnostic assessments (administered each term: Fall, Winter, and Spring). While iReady provides valuable assessment data, the platform has significant limitations:
 
-1. **Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year.
+1. **Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year. Additionally, it is standard that new students move in during the year (or current students move out). The current iReady framework does not make it easy to compare one term to the next if a student has bee added.
 
 2. **Missing Growth Analysis**: Winter and Spring diagnostic files don't automatically show whether students met their growth goals. Teachers can only see:
    - Raw scores
@@ -42,6 +42,7 @@ A single Excel file containing:
   - Green for met growth goals and positive progress
   - Red for unmet goals and negative progress
   - Color-coded grade level placements for easy visual scanning
+- **Note**: This was created with fourth grade in mind (ie., fourth grade standards are hard-coded for a school's specific abbreviations). Please reach out if you would like to use this with your grade level.
 
 ### Supported Formats
 
@@ -50,7 +51,19 @@ A single Excel file containing:
 - **Input**: iReady CSV exports
 - **Output**: Formatted Excel file with conditional styling
 
-## Installation
+## Quick Start (Windows Users)
+
+**No Python required!**
+
+1. Download `iReadyETL.exe` from this repository
+2. Double-click to launch
+3. Follow the configuration prompts
+4. Select your CSV files. **CAUTION:** if you are uploading fall and winter you must upload fall csv first and winter second, similar for fall, winter, and spring (i.e., order upload matters)
+5. Done!
+
+My personal machine is MacOS, but most school districts utilize WindowsOS. Thus, the interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS configuration.
+
+## Or: Manual Installation (if you prefer)
 
 ### Requirements
 
