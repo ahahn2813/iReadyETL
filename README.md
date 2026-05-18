@@ -63,6 +63,29 @@ A single Excel file containing:
 
 My personal machine is MacOS, but most school districts utilize WindowsOS. Thus, the interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS configuration!
 
+### 🛡️ Windows Defender SmartScreen Warning
+
+You may see a Windows Defender SmartScreen warning when downloading or running `iReadyETL.exe`. **This is safe to ignore.**
+
+**Why does this happen?**
+- Your .exe is new and not yet recognized by Microsoft's reputation system
+- PyInstaller-built executables sometimes trigger false positives
+- The tool is 100% open source—you can review the code on GitHub to verify it's safe
+
+**How to proceed:**
+1. Click **"More info"** on the SmartScreen warning
+2. Click **"Run anyway"**
+3. Your file will run normally and the warning will not appear again
+
+**What we're doing about it:**
+- The warning will automatically disappear as more people safely download and run the tool (Microsoft builds reputation over time)
+- We may implement code signing in the future for complete elimination of this warning
+
+**If you're concerned:**
+- Review the open-source code yourself on GitHub
+- Run the Python version instead (see "Manual Installation" below—no .exe needed)
+- Contact us with questions
+
 ## 💻 Or: Manual Installation (if you prefer)
 
 ### Requirements
