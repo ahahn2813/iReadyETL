@@ -190,7 +190,8 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
     mask = list(final_merge_data.columns.str.contains("student|stretch|typical|growth|score|lexile|percentile",flags=re.IGNORECASE,  regex = True))
     not_mask = [not x for x in mask]
     grades_col = final_merge_data.columns[not_mask]
-    (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl"))
+    (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
+    
 #
 
 # def main_clean_engineering(data_list, subject):
