@@ -2,20 +2,20 @@
 
 A user-friendly ETL (Extract, Transform, Load) tool that transforms iReady diagnostic CSV exports into comprehensive, multi-term Excel reports—designed specifically for elementary school teachers.
 
-## The Problem
+## ⚠️ The Problem
 
 Teachers use **iReady** for homework assignments and diagnostic assessments (administered each term: Fall, Winter, and Spring). While iReady provides valuable assessment data, the platform has significant limitations:
 
-1. **Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year.
+1. **📊 Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year.
 
-2. **Missing Growth Analysis**: Winter and Spring diagnostic files don't automatically show whether students met their growth goals. Teachers can only see:
+2. **❓ Missing Growth Analysis**: Winter and Spring diagnostic files don't automatically show whether students met their growth goals. Teachers can only see:
    - Raw scores
    - Grade placement levels
    - Percentiles
    - Lexile levels
    - Other subject-specific skills
 
-3. **Manual Workarounds**: To determine if a student achieved their "typical" or "stretch" growth goals, teachers must manually:
+3. **⏰ Manual Workarounds**: To determine if a student achieved their "typical" or "stretch" growth goals, teachers must manually:
    - Calculate score differences between terms
    - Compare against goals (which are only visible in Fall data)
    - Click through individual student profiles to find missing information
@@ -23,11 +23,11 @@ Teachers use **iReady** for homework assignments and diagnostic assessments (adm
 
 **Result**: What should be a quick data review becomes hours of tedious manual work.
 
-## The Solution
+## ✨ The Solution
 
 **iReadyETL** eliminates this workflow by automating the entire process. Simply upload your iReady CSV files (for any combination of terms), and get back a beautifully formatted, feature-rich Excel report in seconds.
 
-### What You Get
+### 📋 What You Get
 
 A single Excel file containing:
 
@@ -39,31 +39,31 @@ A single Excel file containing:
   - Quantified growth amounts between terms
 - **Performance Metrics**: Percentiles, grade level placements, core standard assessments (Reading: Phonemic Awareness, Phonics, High Frequency Words, Vocabulary, Comprehension; Math: Number Operations, Algebraic Algebra, Measurement & Data, Geometry)
 - **Color-Coded Visualization**:
-  - Green for met growth goals and positive progress
-  - Red for unmet goals and negative progress
+  - 🟢 Green for met growth goals and positive progress
+  - 🔴 Red for unmet goals and negative progress
   - Color-coded grade level placements for easy visual scanning
 - **Note**: This was created with fourth grade in mind (ie., fourth grade standards are hard-coded for a school's specific abbreviations). Please reach out if you would like to use this with your grade level!
 
-### Supported Formats
+### 📁 Supported Formats
 
 - **Subjects**: Reading and Math
 - **Terms**: Fall, Winter, Spring (any combination—one term, two terms, or all three)
 - **Input**: iReady CSV exports
 - **Output**: Formatted Excel file with conditional styling
 
-## Quick Start (Windows Users)
+## 🚀 Quick Start (Windows Users)
 
 **No Python required!**
 
 1. Download `iReadyETL.exe` from this repository
 2. Double-click to launch
 3. Follow the configuration prompts
-4. Select your CSV files. **CAUTION:** if you are uploading fall and winter you must upload fall csv first and winter second, similar for fall, winter, and spring (i.e., order upload matters)
+4. Select your CSV files. **⚠️ CAUTION:** if you are uploading fall and winter you must upload fall csv first and winter second, similar for fall, winter, and spring (i.e., order upload matters)
 5. Done!
 
 My personal machine is MacOS, but most school districts utilize WindowsOS. Thus, the interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS configuration!
 
-## Or: Manual Installation (if you prefer)
+## 💻 Or: Manual Installation (if you prefer)
 
 ### Requirements
 
@@ -98,7 +98,7 @@ My personal machine is MacOS, but most school districts utilize WindowsOS. Thus,
    python iready_etl.py
    ```
 
-## Usage
+## 📖 Usage
 
 ### Step 1: Launch the Configuration Window
 
@@ -126,7 +126,7 @@ The tool generates a professionally formatted Excel file with:
 - Color-coded cells for quick visual analysis
 - Ready-to-share format for data team meetings, parent communications, or progress monitoring
 
-## Example Workflow
+## 📈 Example Workflow
 
 **Scenario**: A teacher downloads Fall, Winter, and Spring Math diagnostic CSVs and wants to see which students met their yearly growth goals.
 
@@ -140,9 +140,9 @@ The tool generates a professionally formatted Excel file with:
    - Exact growth amounts (+15 points, -8 points, etc.)
    - Color-coded visual summary
 
-**Time Saved**: Approximately 2-3 hours of manual data entry and calculation reduced to **1 minute**.
+**⏱️ Time Saved**: Approximately 2-3 hours of manual data entry and calculation reduced to **1 minute**.
 
-## How It Works
+## 🔧 How It Works
 
 ### Data Processing Pipeline
 
@@ -167,17 +167,17 @@ The tool generates a professionally formatted Excel file with:
    - Red cells for no growth/unmet goals
    - Rounds numeric values for cleaner presentation
 
-## Security & Privacy
+## 🔐 Security & Privacy
 
 **Your student data is safe.**
 
 iReadyETL is a **100% local application**—all processing happens on your personal device or school computer. 
 
-✅ **No data transmission**: CSV files are never uploaded to external servers  
-✅ **No data collection**: iReadyETL does not collect, store, or track any user information  
-✅ **No third-party sharing**: Student data never leaves your device  
-✅ **FERPA compliant**: Works entirely within your school's existing data security protocols  
-✅ **Open source**: Full transparency—review the code to see exactly what the tool does with your data  
+- ✅ **No data transmission**: CSV files are never uploaded to external servers  
+- ✅ **No data collection**: iReadyETL does not collect, store, or track any user information  
+- ✅ **No third-party sharing**: Student data never leaves your device  
+- ✅ **FERPA compliant**: Works entirely within your school's existing data security protocols  
+- ✅ **Open source**: Full transparency—review the code to see exactly what the tool does with your data  
 
 **How it works:**
 - You select files from your local device
@@ -187,7 +187,7 @@ iReadyETL is a **100% local application**—all processing happens on your perso
 
 This makes iReadyETL particularly suited for schools with strict data privacy requirements and FERPA compliance obligations.
 
-## Key Features
+## ⭐ Key Features
 
 ✅ **No Coding Required** - Simple GUI for non-technical users  
 ✅ **Flexible Term Selection** - Process any combination of Fall, Winter, and/or Spring data  
@@ -198,7 +198,7 @@ This makes iReadyETL particularly suited for schools with strict data privacy re
 ✅ **Accessible** - Designed specifically for teachers with no coding experience  
 ✅ **Secure & Private** - All processing happens locally on your device
 
-## Technical Architecture
+## 🛠️ Technical Architecture
 
 - **Language**: Python 3
 - **Core Libraries**: Pandas (data manipulation), OpenPyXL (Excel export)
@@ -206,7 +206,7 @@ This makes iReadyETL particularly suited for schools with strict data privacy re
 - **Data Format**: CSV input, XLSX output
 - **Data Processing**: 100% local (no external APIs or network communication)
 
-## Limitations & Future Enhancements
+## 📋 Limitations & Future Enhancements
 
 ### Current Limitations
 - `.exe` is Windows-only; Python users can run on any operating system (Windows, MacOS, Linux)
@@ -214,7 +214,7 @@ This makes iReadyETL particularly suited for schools with strict data privacy re
 - Single-subject processing (process Math and Reading separately)
 - Hard-coded for fourth grade standards (customization available upon request)
 
-### Potential Enhancements
+### 🚀 Potential Enhancements
 - Standalone executables for MacOS and Linux
 - Support for additional assessment platforms (Fountas & Pinnell, NWEA MAP, etc.)
 - Dashboard/visualization features for district-level analysis
@@ -223,22 +223,22 @@ This makes iReadyETL particularly suited for schools with strict data privacy re
 - Automatic email delivery of reports
 - Customizable grade-level standards
 
-## Contributing
+## 🤝 Contributing
 
 This project was created to solve a real problem for educators. Contributions are welcome! If you have suggestions for improvements or encounter issues, please feel free to open an issue or submit a pull request.
 
-## License
+## 📜 License
 
 This project is open source and available for educational use.
 
-## Support
+## 💬 Support
 
 For questions or issues:
 1. Check the repository's [Issues](https://github.com/ahahn2813/iReadyETL/issues) section
 2. Review the usage examples above
 3. Verify your CSV files match the iReady export format
 
-## Acknowledgments
+## 🎓 Acknowledgments
 
 Built for elementary school teachers who spend countless hours analyzing student assessment data. This tool was created to give teachers back their time.
 
