@@ -167,6 +167,26 @@ The tool generates a professionally formatted Excel file with:
    - Red cells for no growth/unmet goals
    - Rounds numeric values for cleaner presentation
 
+## Security & Privacy
+
+**Your student data is safe.**
+
+iReadyETL is a **100% local application**—all processing happens on your personal device or school computer. 
+
+✅ **No data transmission**: CSV files are never uploaded to external servers  
+✅ **No data collection**: iReadyETL does not collect, store, or track any user information  
+✅ **No third-party sharing**: Student data never leaves your device  
+✅ **FERPA compliant**: Works entirely within your school's existing data security protocols  
+✅ **Open source**: Full transparency—review the code to see exactly what the tool does with your data  
+
+**How it works:**
+- You select files from your local device
+- The tool processes them locally using only the libraries on your computer
+- The output Excel file is saved wherever you choose on your local device
+- That's it—no network calls, no uploads, no cloud storage
+
+This makes iReadyETL particularly suited for schools with strict data privacy requirements and FERPA compliance obligations.
+
 ## Key Features
 
 ✅ **No Coding Required** - Simple GUI for non-technical users  
@@ -176,6 +196,7 @@ The tool generates a professionally formatted Excel file with:
 ✅ **Class or Grade-Level** - Works with individual class rosters or full grade data  
 ✅ **Fast** - Converts hours of manual work to seconds  
 ✅ **Accessible** - Designed specifically for teachers with no coding experience  
+✅ **Secure & Private** - All processing happens locally on your device
 
 ## Technical Architecture
 
@@ -183,6 +204,7 @@ The tool generates a professionally formatted Excel file with:
 - **Core Libraries**: Pandas (data manipulation), OpenPyXL (Excel export)
 - **Interface**: Tkinter (desktop GUI)
 - **Data Format**: CSV input, XLSX output
+- **Data Processing**: 100% local (no external APIs or network communication)
 
 ## Limitations & Future Enhancements
 
