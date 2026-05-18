@@ -242,6 +242,8 @@ For questions or issues:
 
 Built for elementary school teachers who spend countless hours analyzing student assessment data. This tool was created to give teachers back their time.
 
+All data cleaning, merging, feature engineering, and code structure is original and created without use of AI (lines 1-210). Gemini was used to debug the GUI implementation portion of the code.
+
 ---
 
-**Questions?** Open an issue on this repository or contact the maintainers.
+**Questions?** Open an issue on this repository or feel free to reach out to the maintainer!
