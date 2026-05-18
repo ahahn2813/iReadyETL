@@ -6,7 +6,7 @@ A user-friendly ETL (Extract, Transform, Load) tool that transforms iReady diagn
 
 Teachers use **iReady** for homework assignments and diagnostic assessments (administered each term: Fall, Winter, and Spring). While iReady provides valuable assessment data, the platform has significant limitations:
 
-1. **Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year. Additionally, it is standard that new students move in during the year (or current students move out). The current iReady framework does not make it easy to compare one term to the next if a student has bee added.
+1. **Fragmented Data**: Teachers can only download diagnostic data for a single term at a time (Fall *or* Winter *or* Spring), making it difficult to track and compare student progress across the school year.
 
 2. **Missing Growth Analysis**: Winter and Spring diagnostic files don't automatically show whether students met their growth goals. Teachers can only see:
    - Raw scores
@@ -42,7 +42,7 @@ A single Excel file containing:
   - Green for met growth goals and positive progress
   - Red for unmet goals and negative progress
   - Color-coded grade level placements for easy visual scanning
-- **Note**: This was created with fourth grade in mind (ie., fourth grade standards are hard-coded for a school's specific abbreviations). Please reach out if you would like to use this with your grade level.
+- **Note**: This was created with fourth grade in mind (ie., fourth grade standards are hard-coded for a school's specific abbreviations). Please reach out if you would like to use this with your grade level!
 
 ### Supported Formats
 
@@ -61,7 +61,7 @@ A single Excel file containing:
 4. Select your CSV files. **CAUTION:** if you are uploading fall and winter you must upload fall csv first and winter second, similar for fall, winter, and spring (i.e., order upload matters)
 5. Done!
 
-My personal machine is MacOS, but most school districts utilize WindowsOS. Thus, the interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS configuration.
+My personal machine is MacOS, but most school districts utilize WindowsOS. Thus, the interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS configuration!
 
 ## Or: Manual Installation (if you prefer)
 
@@ -187,17 +187,19 @@ The tool generates a professionally formatted Excel file with:
 ## Limitations & Future Enhancements
 
 ### Current Limitations
-- Requires Python installation and command-line execution
+- `.exe` is Windows-only; Python users can run on any operating system (Windows, MacOS, Linux)
 - Works with iReady CSV format only (other assessment platforms not yet supported)
 - Single-subject processing (process Math and Reading separately)
+- Hard-coded for fourth grade standards (customization available upon request)
 
 ### Potential Enhancements
-- Standalone executable (.exe) to eliminate Python dependency
+- Standalone executables for MacOS and Linux
 - Support for additional assessment platforms (Fountas & Pinnell, NWEA MAP, etc.)
 - Dashboard/visualization features for district-level analysis
 - Batch processing for multiple classes/grades
 - Google Sheets integration
 - Automatic email delivery of reports
+- Customizable grade-level standards
 
 ## Contributing
 
