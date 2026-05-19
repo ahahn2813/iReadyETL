@@ -6,7 +6,6 @@ import re
 import openpyxl
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
-#ds
 
 def clean_iready_read(iready_read, term):
     iready_read.columns = iready_read.columns.str.lower().str.replace(" ", "_")
