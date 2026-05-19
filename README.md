@@ -86,6 +86,26 @@ You may see a Windows Defender SmartScreen warning when downloading or running `
 - Run the Python version instead (see "Manual Installation" below—no .exe needed)
 - Contact us with questions
 
+### 🧪 Test with Example Data
+
+Want to try the tool before using your actual student data? This repository includes **synthetic iReady CSV files** in the `iReady_Data_Example_Synthetic/` folder:
+
+- `synthetic_FA_iready_math.csv` - Fall Math example
+- `synthetic_FA_iready_reading.csv` - Fall Reading example
+- `synthetic_WI_iready_math.csv` - Winter Math example
+- `synthetic_WI_iready_reading.csv` - Winter Reading example
+- `synthetic_SP_iready_math.csv` - Spring Math example
+- `synthetic_SP_iready_reading.csv` - Spring Reading example
+
+**Quick Test Workflow:**
+1. Download the `.exe` and launch it
+2. Select Math or Reading and check the terms you want (e.g., Fall + Winter)
+3. When prompted, select the corresponding synthetic CSV files from `iReady_Data_Example_Synthetic/`
+4. Save your test output file
+5. Review the formatted Excel report to see how the tool works
+
+This is a risk-free way to explore all features without worrying about student data!
+
 ## 💻 Or: Manual Installation (if you prefer)
 
 ### Requirements
