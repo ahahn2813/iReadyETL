@@ -47,13 +47,11 @@ def clean_iready_math(iready_math, term):
     return iready_math
 
 # complete feature engineering: determin amount of growth, whether typical and stretch goals were met, aesthetic changes
-def merge_engineer(data_list, subject):
-    if len(data_list) == 3:
-        term_list = ["FA", "WI", "SP"]
-    elif len(data_list) == 2:
-        term_list = ["FA", "WI"]
-    else:
-        term_list = ["FA"]
+def merge_engineer(data_dict, subject):
+    data_list = list(data_dict.values())
+    term_list = list(data_dict.keys())
+    term_list = [term.upper() for term in term_list]
+
     for i in range(len(data_list)):
         if subject == "Reading":
             data_list[i] = clean_iready_read(data_list[i], term_list[i])
@@ -204,42 +202,187 @@ def main_clean_engineering(data_list, subject, full_file_path):
 
 # Desktop GUI----------
 
+# def run_setup_gui():
+#     setup_window = tk.Tk()
+#     setup_window.title("ETL Tool Configuration")
+#     setup_window.geometry("350x280")
+    
+#     subject_var = tk.StringVar(value="Math")
+#     fall_var = tk.BooleanVar(value=True)
+#     winter_var = tk.BooleanVar(value=False)
+#     spring_var = tk.BooleanVar(value=False)
+    
+#     tk.Label(setup_window, text="1. Select Subject", font=("Arial", 11, "bold")).pack(pady=(10, 2))
+#     subject_frame = tk.Frame(setup_window)
+#     subject_frame.pack()
+#     tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math").pack(side="left", padx=15)
+#     tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading").pack(side="left", padx=15)
+    
+#     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=20, pady=10)
+    
+#     tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 11, "bold")).pack(pady=(0, 2))
+#     tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var).pack(anchor="w", padx=60, pady=2)
+#     tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var).pack(anchor="w", padx=60, pady=2)
+    
+#     tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var).pack(anchor="w", padx=60, pady=2)
+    
+#     config_results = {"subject": None, "terms": []}
+    
+#     def on_submit():
+#         config_results["subject"] = subject_var.get()
+#         if fall_var.get(): config_results["terms"].append("FALL")
+#         if winter_var.get(): config_results["terms"].append("WINTER")
+#         if spring_var.get(): config_results["terms"].append("SPRING")
+#         setup_window.destroy()
+
+#     tk.Button(setup_window, text="Next", command=on_submit, width=10, bg="#2196F3", fg="black").pack(pady=15)
+#     setup_window.mainloop()
+#     return config_results
+
 def run_setup_gui():
     setup_window = tk.Tk()
     setup_window.title("ETL Tool Configuration")
-    setup_window.geometry("350x280")
+    setup_window.geometry("650x600")
+    
+    try:
+        setup_window.tk.call('tk', 'scaling', 2.0)
+    except:
+        pass
     
     subject_var = tk.StringVar(value="Math")
     fall_var = tk.BooleanVar(value=True)
     winter_var = tk.BooleanVar(value=False)
     spring_var = tk.BooleanVar(value=False)
     
-    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 11, "bold")).pack(pady=(10, 2))
+    selected_files = {"FALL": None, "WINTER": None, "SPRING": None}
+    term_widgets = {}
+    
+    def browse_file(term):
+        """Open file dialog for specific term"""
+        subject = subject_var.get()
+        file_path = filedialog.askopenfilename(
+            title=f"Select {term.capitalize()} {subject} Test Scores CSV",
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+        )
+        if file_path:
+            selected_files[term] = file_path
+            filename = file_path.split('/')[-1]
+            term_widgets[term]["label"].config(text=f"✓ {filename}", fg="green")
+        else:
+            selected_files[term] = None
+            term_widgets[term]["label"].config(text="No file selected", fg="gray")
+    
+    def update_file_section_visibility():
+        """Show/hide file selection rows based on checkbox selection"""
+        for term, var in [("FALL", fall_var), ("WINTER", winter_var), ("SPRING", spring_var)]:
+            if var.get():
+                term_widgets[term]["frame"].pack(anchor="w", padx=50, pady=8, fill="x")
+            else:
+                term_widgets[term]["frame"].pack_forget()
+                selected_files[term] = None
+    
+    # ===== SECTION 1: Subject Selection =====
+    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 13, "bold")).pack(pady=(15, 5))
     subject_frame = tk.Frame(setup_window)
-    subject_frame.pack()
-    tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math").pack(side="left", padx=15)
-    tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading").pack(side="left", padx=15)
+    subject_frame.pack(pady=10)
+    tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math", font=("Arial", 11)).pack(side="left", padx=20)
+    tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading", font=("Arial", 11)).pack(side="left", padx=20)
     
-    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=20, pady=10)
+    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 11, "bold")).pack(pady=(0, 2))
-    tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var).pack(anchor="w", padx=60, pady=2)
-    tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var).pack(anchor="w", padx=60, pady=2)
+    # ===== SECTION 2: Term Selection =====
+    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 13, "bold")).pack(pady=(5, 10))
+    tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
+    tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
+    tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
     
-    tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var).pack(anchor="w", padx=60, pady=2)
+    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    config_results = {"subject": None, "terms": []}
+    # ===== SECTION 3: File Selection =====
+    tk.Label(setup_window, text="3. Select Your Files", font=("Arial", 13, "bold")).pack(pady=(5, 10))
+    
+    files_container = tk.Frame(setup_window)
+    files_container.pack(fill="both", expand=True, padx=30, pady=10)
+    
+    for term in ["FALL", "WINTER", "SPRING"]:
+        frame = tk.Frame(files_container, relief="sunken", borderwidth=1, bg="white")
+        term_widgets[term] = {"frame": frame}
+        
+        term_label = tk.Label(frame, text=f"{term.capitalize()}:", font=("Arial", 11, "bold"), width=10, anchor="w", bg="white")
+        term_label.pack(side="left", padx=10, pady=8)
+        
+        browse_btn = tk.Button(frame, text="Browse File", font=("Arial", 10), width=14, 
+                              command=lambda t=term: browse_file(t), bg="#4CAF50", fg="white")
+        browse_btn.pack(side="left", padx=5)
+        
+        status_label = tk.Label(frame, text="No file selected", font=("Arial", 9), fg="gray", anchor="w", bg="white")
+        status_label.pack(side="left", padx=10, fill="x", expand=True)
+        
+        term_widgets[term]["label"] = status_label
+    
+    config_results = {"subject": None, "terms": [], "files": selected_files}
     
     def on_submit():
+        selected_terms = []
+        if fall_var.get(): 
+            selected_terms.append("FALL")
+        if winter_var.get(): 
+            selected_terms.append("WINTER")
+        if spring_var.get(): 
+            selected_terms.append("SPRING")
+        
+        missing_files = [term for term in selected_terms if not selected_files[term]]
+        
+        if missing_files:
+            messagebox.showwarning("Missing Files", f"Please select files for: {', '.join(missing_files)}")
+            return
+        
         config_results["subject"] = subject_var.get()
-        if fall_var.get(): config_results["terms"].append("FALL")
-        if winter_var.get(): config_results["terms"].append("WINTER")
-        if spring_var.get(): config_results["terms"].append("SPRING")
+        config_results["terms"] = selected_terms
         setup_window.destroy()
 
-    tk.Button(setup_window, text="Next", command=on_submit, width=10, bg="#2196F3", fg="black").pack(pady=15)
+    tk.Button(setup_window, text="Next", command=on_submit, width=12, font=("Arial", 11, "bold"), bg="#2196F3", fg="white").pack(pady=20)
+    
+    update_file_section_visibility()
     setup_window.mainloop()
     return config_results
+
+# if __name__ == "__main__":
+#     user_config = run_setup_gui()
+
+#     if not user_config["subject"] or not user_config["terms"]:
+#         root = tk.Tk()
+#         root.withdraw()
+#         messagebox.showwarning("Cancelled", "Configuration incomplete. Exiting tool.")
+#         root.destroy()
+#         exit()
+
+#     chosen_subject = user_config["subject"]
+#     terms_to_prompt = user_config["terms"]
+    
+#     root = tk.Tk()
+#     root.withdraw()
+    
+#     try:
+#         # Use selected files directly instead of opening dialogs
+#         csv_dataframes_list = [pd.read_csv(user_config["files"][term]) for term in terms_to_prompt]
+        
+#         output_path = filedialog.asksaveasfilename(
+#             title=f"Save Final {chosen_subject} Score Report",
+#             defaultextension=".xlsx",
+#             filetypes=[("Excel files", "*.xlsx")]
+#         )
+        
+#         if output_path:
+#             main_clean_engineering(csv_dataframes_list, chosen_subject, output_path)
+#             messagebox.showinfo("Success", f"{chosen_subject} data ETL complete! Excel sheet created successfully.")
+#         else:
+#             messagebox.showwarning("Cancelled", "Export cancelled. File was not saved.")
+            
+#     except Exception as e:
+#         messagebox.showerror("Error", f"An error occurred during processing:\n{str(e)}")
+        
+#     root.destroy()
 
 if __name__ == "__main__":
     user_config = run_setup_gui()
@@ -252,25 +395,20 @@ if __name__ == "__main__":
         exit()
 
     chosen_subject = user_config["subject"]
-    terms_to_prompt = user_config["terms"]
-
+    terms_selected = user_config["terms"]
+    
     root = tk.Tk()
     root.withdraw()
-    csv_dataframes_list = []
     
     try:
-        for term in terms_to_prompt:
-            title_text = f"Select {term} {chosen_subject.upper()} Test Scores CSV"
-            path = filedialog.askopenfilename(title=title_text, filetypes=[("CSV files", "*.csv")])
-            
-            if path:
-                df = pd.read_csv(path)
-                csv_dataframes_list.append(df)
-            else:
-                messagebox.showwarning("Cancelled", f"You did not select a file for {term}. Process cancelled.")
-                root.destroy()
-                exit()
-            
+        # Create dictionary mapping term names to dataframes
+        csv_dataframes_dict = {}
+        for term in terms_selected:
+            # Map full term names to abbreviations for dictionary keys
+            term_abbrev = term[:2].lower()  # "FALL" -> "fa", "WINTER" -> "wi", "SPRING" -> "sp"
+            file_path = user_config["files"][term]
+            csv_dataframes_dict[term_abbrev] = pd.read_csv(file_path)
+        
         output_path = filedialog.asksaveasfilename(
             title=f"Save Final {chosen_subject} Score Report",
             defaultextension=".xlsx",
@@ -278,7 +416,7 @@ if __name__ == "__main__":
         )
         
         if output_path:
-            main_clean_engineering(csv_dataframes_list, chosen_subject, output_path)
+            main_clean_engineering(csv_dataframes_dict, chosen_subject, output_path)
             messagebox.showinfo("Success", f"{chosen_subject} data ETL complete! Excel sheet created successfully.")
         else:
             messagebox.showwarning("Cancelled", "Export cancelled. File was not saved.")
