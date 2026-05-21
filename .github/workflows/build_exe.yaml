@@ -1,8 +1,12 @@
 name: Compile Windows Executable
 
+# on:
+#   push:
+#     branches: [ main, master ] # Triggers whenever you push changes to main or master branches
+
 on:
   push:
-    branches: [ main, master ] # Triggers whenever you push changes to main or master branches
+    branches: [ main, master, GUI_improve ]
 
 jobs:
   build:
