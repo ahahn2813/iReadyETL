@@ -7,6 +7,7 @@ import openpyxl
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
 
+# clean the reading data, prepare for feature engineering
 def clean_iready_read(iready_read, term):
     iready_read.columns = iready_read.columns.str.lower().str.replace(" ", "_")
     drop_rel_list = list(iready_read.columns[iready_read.columns.str.contains("relative")])
@@ -26,10 +27,10 @@ def clean_iready_read(iready_read, term):
     iready_read = iready_read.add_prefix("iReady_" + term + "_")
     return iready_read
 
+# clean the math data, prepare for feature engineering
 def clean_iready_math(iready_math, term):
     iready_math.columns = iready_math.columns.str.lower().str.replace(" ", "_")
     drop_list = list(iready_math.columns[iready_math.columns.str.contains("relative|quantile|projection|proficiency|date|flag|language", regex = True)])
-    #drop_list = drop_rel_list + ["projection_if_student_achieves_typical_growth", "projection_if_student_achieves_stretch_growth", "proficiency_if_student_shows_no_additional_growth", "diagnostic_language", "date", "rush_flag"]
     iready_math = iready_math.drop(columns=drop_list)
     list_placement = list(iready_math.columns[iready_math.columns.str.contains("placement")])
     for col in list_placement:
@@ -45,7 +46,7 @@ def clean_iready_math(iready_math, term):
     iready_math = iready_math.add_prefix("iReady_" + term + "_")
     return iready_math
 
-
+# complete feature engineering: determin amount of growth, whether typical and stretch goals were met, aesthetic changes
 def merge_engineer(data_list, subject):
     if len(data_list) == 3:
         term_list = ["FA", "WI", "SP"]
@@ -119,6 +120,8 @@ def merge_engineer(data_list, subject):
     final_merge.columns = final_merge.columns.str.replace("_", " ")
     return final_merge
 
+# final cleaning of student name: sort students alphabetically by last name
+# teacher wanted student's number and first and last name together in the first column
 def final_clean_class(final_merge):
     final_merge[["last_name", "first_name"]] =  final_merge.loc[:,"student"].str.split(",", expand = True)
     final_merge = final_merge.drop(columns = ["student"])
@@ -130,6 +133,8 @@ def final_clean_class(final_merge):
     final_merge.loc[:, numeric_col] = final_merge.loc[:, numeric_col].round()
     return final_merge
 
+# final cleaning of student name: sort students alphabetically by last name
+# this method could be used if teacher has entire grade's data available
 def final_clean_grade(final_merge):
     final_merge[["last_name", "first_name"]] =  final_merge.loc[:,"student"].str.split(",", expand = True)
     final_merge = final_merge.drop(columns = ["student"])
@@ -142,7 +147,10 @@ def final_clean_grade(final_merge):
     return final_merge
 
 
-# Define custom color logic
+# Define custom color logic for Excel spreadsheet----------------
+# this coloring was specific to teacher's request
+
+#color whether the students' scores went up or down since previous diagnostic
 def color_growth_amount(val):
     if val >= 0:
         return 'background-color: #2d7d3a; color: black;'
@@ -150,7 +158,8 @@ def color_growth_amount(val):
         return 'background-color: #9c0909; color: black;'
     else:
         return 'background-color: #434544; color: #434544;'
-    
+
+# color whether student met their typical and stretch growth goals
 def color_growth(val):
     if val == "YES":
         return 'background-color: #2d7d3a; color: black;'
@@ -158,7 +167,10 @@ def color_growth(val):
         return 'background-color: #9c0909; color: black;'
     else:
         return 'background-color: #434544; color: #434544;'
-    
+
+# color the current grade level the student is scoring for each standard tested
+# this also colors NA's gray/black. This allows us to visually account for students who may have moved in or out
+# during the school year
 def color_grade_level(val):
     early_grades = {"Gr K": "#c94d4d", "Gr 1": "#c96969", "Gr 2": "#eb9b9b", "Gr 3":"#faf2b9"}
     four_grade = {"Early 4":"#b4dbb8", "Mid 4":"#7bb582", "Late 4":"#538a5a"}
@@ -176,20 +188,21 @@ def color_grade_level(val):
         return'background-color: #434544; color: #434544;'
     
 def get_colored_spreadsheet(final_merge_data,full_file_path):
-    # Apply mapping and export
+    # get the columns needed for each of the previous three functions. Used regex to identity as generally as possible
     amount_col = final_merge_data.columns[final_merge_data.columns.str.contains("amount", flags=re.IGNORECASE, regex = True)]
     growth_col = final_merge_data.columns[final_merge_data.columns.str.contains("stretch|typical",flags=re.IGNORECASE, regex = True)& final_merge_data.columns.str.contains("growth", regex = True)]
     mask = list(final_merge_data.columns.str.contains("student|stretch|typical|growth|score|lexile|percentile",flags=re.IGNORECASE,  regex = True))
     not_mask = [not x for x in mask]
     grades_col = final_merge_data.columns[not_mask]
+    # Apply mapping and export
     (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
 
+# MAIN---------------------------------------------------
 def main_clean_engineering(data_list, subject, full_file_path):
-    # FIXED: Adjusted pipeline parameters to accept target destination directory dynamically
     final_merge_data = merge_engineer(data_list, subject)
     get_colored_spreadsheet(final_merge_data, full_file_path)
 
-# --- RUNTIME RUN DESKTOP GUI ---
+# Desktop GUI----------
 
 def run_setup_gui():
     setup_window = tk.Tk()
@@ -213,7 +226,6 @@ def run_setup_gui():
     tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var).pack(anchor="w", padx=60, pady=2)
     tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var).pack(anchor="w", padx=60, pady=2)
     
-    # FIXED: Changed from 'selection_window' back to tracking scope target 'setup_window'
     tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var).pack(anchor="w", padx=60, pady=2)
     
     config_results = {"subject": None, "terms": []}
