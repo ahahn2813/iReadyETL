@@ -248,9 +248,10 @@ def make_figures(data_dict, final_merge_data):
 
 
 # MAIN---------------------------------------------------
-def main_clean_engineering(data_list, subject, full_file_path):
-    final_merge_data = merge_engineer(data_list, subject)
+def main_clean_engineering(data_dict, subject, full_file_path):
+    final_merge_data = merge_engineer(data_dict, subject)
     get_colored_spreadsheet(final_merge_data, full_file_path)
+    make_figures(data_dict, final_merge_data)
 
 def run_setup_gui():
     setup_window = tk.Tk()
