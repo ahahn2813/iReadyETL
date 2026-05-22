@@ -198,6 +198,8 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
 def make_figures(data_dict, final_merge_data):
     data_list = list(data_dict.values())
     term_list = list(data_dict.keys())
+    term_list = [term.upper() for term in term_list]
+
     sns.set_style("darkgrid")
     plt.rc('font', size=14)
     plt.rc('axes', labelsize=20, titlesize=18)
@@ -219,7 +221,17 @@ def make_figures(data_dict, final_merge_data):
 
     if len(term_list == 1):
         # just the boxplot for score alone because there's only one term so no growth can be calculated
-        fig, ax = plt.subplots(1,2, figsize = (20,8))
+        fig, ax = plt.subplots(1, 2, figsize=(18, 8))
+        plt.suptitle(term_label + "Scores and Overall Placement", fontsize = 28,y = .95)
+        sns.boxplot(final_merge_data, x = "iReady" + term_list[0] + "score", color = latex_blue, ax = ax[0])
+        sns.countplot(final_merge_data, x= "iReady" + term_list[0] + "Overall Place",color = latex_blue, ax=ax[1], stat = 'percent')
+
+        ax[1].set_ylabel("Percentage")
+        ax[0].set_xlabel("iReady" + term_label + "Scores")
+        ax[1].set_xlabel("iReady" + term_label + "Overall Placement")
+        for container in ax[1].containers:
+                ax[1].bar_label(container, fmt='%.1f%%')
+        fig.savefig('scores_and_placement.png')
 
     else:
         # first put yes and no for growth
