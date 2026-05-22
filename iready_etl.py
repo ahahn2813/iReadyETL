@@ -93,7 +93,7 @@ def merge_engineer(data_dict, subject):
         final_merge = merge_spring
     elif len(term_list) == 2:
         #merge winter on all students
-        data_list[0] = data_list[0].loc[:,"spacer_0"] = "NAN"
+        data_list[0].loc[:,"spacer_0"] = "NAN"
         merge_winter = pd.merge(data_list[0].rename(columns = {"iReady_"+term_list[0]+"_student":"student"}), data_list[1].rename(columns={"iReady_"+term_list[1]+"_student":"student"}), how = "outer", on = "student")
         #feature engineer for whether met growth goals
         merge_winter.loc[merge_winter["iReady_" + term_list[1]+ "_score"]>= merge_winter["iReady_" + term_list[0]+ "_growth_score_goal"], "iReady_" + term_list[1]+ "_typical_growth"] = "YES"
@@ -195,49 +195,62 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
     # Apply mapping and export
     (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
 
+def make_figures(data_dict, final_merge_data):
+    data_list = list(data_dict.values())
+    term_list = list(data_dict.keys())
+    sns.set_style("darkgrid")
+    plt.rc('font', size=14)
+    plt.rc('axes', labelsize=20, titlesize=18)
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=12)
+    plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+    rgb_colors_custom = [(0,80/256,115/256), (255/256, 127/256, 80/256), (255/256, 192/256, 0)]
+    palette=['#2d7d3a', '#9c0909']
+    latex_blue = (0,80/256,115/256)
+
+    
+    if term[len(term_list)-1] == "FA":
+        term_label = "Fall"
+    elif term[len(term_list)-1] == "WI":
+        term_label = "Winter"
+    else:
+        term_label = "Spring"
+
+    if len(term_list == 1):
+        # just the boxplot for score alone because there's only one term so no growth can be calculated
+        fig, ax = plt.subplots(1,2, figsize = (20,8))
+
+    else:
+        # first put yes and no for growth
+        fig, axs = plt.subplots(1, 2, figsize=(15, 8))
+        cat = ["iReady" + term[len(term_list)-1]+ "typical growth", "iReady" + term[len(term_list)-1] + "stretch growth"]
+        cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
+        count = 0
+        for i in range(0,2):
+            axs[i].set_xlabel(cat_labels[count])
+            sns.countplot(data=final_merge_data, x=cat[count],palette=palette, ax=axs[i], stat = "percent")
+            for container in axs[i].containers:
+                axs[i].bar_label(container, fmt='%.1f%%')
+            axs[i].set_ylabel("Percentage")
+            count +=1
+        fig.savefig('GoalsMet.png')
+        
+        # now boxplot and histogram comparing growth amount
+        sub_data = pd.DataFrame()
+        sub_data1 = pd.DataFrame()
+        sub_data["iReady growth amount"] = final_merge_data["iReady WI growth amount"]
+        sub_data["growth_id"] = "FA to WI"
+        sub_data1["iReady growth amount"] = final_merge_data["iReady WI to SP growth amount"]
+        sub_data1["growth_id"] = "WI to SP"
+        data = pd.concat([sub_data, sub_data1], ignore_index=True)
+
+
+
 # MAIN---------------------------------------------------
 def main_clean_engineering(data_list, subject, full_file_path):
     final_merge_data = merge_engineer(data_list, subject)
     get_colored_spreadsheet(final_merge_data, full_file_path)
-
-# Desktop GUI----------
-
-# def run_setup_gui():
-#     setup_window = tk.Tk()
-#     setup_window.title("ETL Tool Configuration")
-#     setup_window.geometry("350x280")
-    
-#     subject_var = tk.StringVar(value="Math")
-#     fall_var = tk.BooleanVar(value=True)
-#     winter_var = tk.BooleanVar(value=False)
-#     spring_var = tk.BooleanVar(value=False)
-    
-#     tk.Label(setup_window, text="1. Select Subject", font=("Arial", 11, "bold")).pack(pady=(10, 2))
-#     subject_frame = tk.Frame(setup_window)
-#     subject_frame.pack()
-#     tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math").pack(side="left", padx=15)
-#     tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading").pack(side="left", padx=15)
-    
-#     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=20, pady=10)
-    
-#     tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 11, "bold")).pack(pady=(0, 2))
-#     tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var).pack(anchor="w", padx=60, pady=2)
-#     tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var).pack(anchor="w", padx=60, pady=2)
-    
-#     tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var).pack(anchor="w", padx=60, pady=2)
-    
-#     config_results = {"subject": None, "terms": []}
-    
-#     def on_submit():
-#         config_results["subject"] = subject_var.get()
-#         if fall_var.get(): config_results["terms"].append("FALL")
-#         if winter_var.get(): config_results["terms"].append("WINTER")
-#         if spring_var.get(): config_results["terms"].append("SPRING")
-#         setup_window.destroy()
-
-#     tk.Button(setup_window, text="Next", command=on_submit, width=10, bg="#2196F3", fg="black").pack(pady=15)
-#     setup_window.mainloop()
-#     return config_results
 
 def run_setup_gui():
     setup_window = tk.Tk()
