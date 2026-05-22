@@ -242,7 +242,7 @@ def main_clean_engineering(data_list, subject, full_file_path):
 def run_setup_gui():
     setup_window = tk.Tk()
     setup_window.title("ETL Tool Configuration")
-    setup_window.geometry("650x600")
+    setup_window.geometry("450x750")
     
     try:
         setup_window.tk.call('tk', 'scaling', 2.0)
@@ -282,7 +282,7 @@ def run_setup_gui():
                 selected_files[term] = None
     
     # ===== SECTION 1: Subject Selection =====
-    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 13, "bold")).pack(pady=(15, 5))
+    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 12, "bold")).pack(pady=(15, 5))
     subject_frame = tk.Frame(setup_window)
     subject_frame.pack(pady=10)
     tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math", font=("Arial", 11)).pack(side="left", padx=20)
@@ -291,7 +291,7 @@ def run_setup_gui():
     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
     # ===== SECTION 2: Term Selection =====
-    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 13, "bold")).pack(pady=(5, 10))
+    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 12, "bold")).pack(pady=(5, 10))
     tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
     tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
     tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
@@ -299,7 +299,7 @@ def run_setup_gui():
     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
     # ===== SECTION 3: File Selection =====
-    tk.Label(setup_window, text="3. Select Your Files", font=("Arial", 13, "bold")).pack(pady=(5, 10))
+    tk.Label(setup_window, text="3. Select Your Files", font=("Arial", 12, "bold")).pack(pady=(5, 10))
     
     files_container = tk.Frame(setup_window)
     files_container.pack(fill="both", expand=True, padx=30, pady=10)
