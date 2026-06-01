@@ -236,7 +236,8 @@ def make_figures(data_dict, final_merge_data):
     elif len(term_list == 2):
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
-        cat = ["iReady" + term[len(term_list)-1]+ "typical growth", "iReady" + term[len(term_list)-1] + "stretch growth"]
+        plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+        cat = ["iReady" + term_list[len(term_list)-1]+ "typical growth", "iReady" + term_list[len(term_list)-1] + "stretch growth"]
         cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
         count = 0
         for i in range(0,2):
@@ -248,14 +249,20 @@ def make_figures(data_dict, final_merge_data):
             count +=1
         fig.savefig('GoalsMet.png')
         
-        # now boxplot and histogram comparing growth amount
-        sub_data = pd.DataFrame()
-        sub_data["iReady growth amount"] = final_merge_data["iReady WI growth amount"]
-        sub_data["growth_id"] = "FA to WI"
+        # now boxplot and histogram showing growth amount
+        fig, ax = plt.subplots(1, 2, figsize=(18, 8))
+        plt.suptitle(term_list[1] + " Score Distribution and Overall Placement", fontsize = 28,y = .95)
+        sns.boxplot(final_merge_data, x = "iReady "+ term_list[1] + " growth amount", color = latex_blue, ax = ax[0])
+        sns.histplot(final_merge_data, x= "iReady "+ term_list[1] + " growth amount",kde = True, color = latex_blue, ax=ax[1], bins = 30)
+        ax[0].set_xlabel("iReady "+ term_list[1] + " Growth Amount")
+        ax[1].set_xlabel("iReady "+ term_list[1] + " Growth Amount")
+        fig.savefig('GrowthAmount.png')
+
     else:
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
-        cat = ["iReady" + term[len(term_list)-1]+ "typical growth", "iReady" + term[len(term_list)-1] + "stretch growth"]
+        plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+        cat = ["iReady" + term_list[len(term_list)-1]+ "typical growth", "iReady" + term_list[len(term_list)-1] + "stretch growth"]
         cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
         count = 0
         for i in range(0,2):
@@ -270,11 +277,26 @@ def make_figures(data_dict, final_merge_data):
         # now boxplot and histogram comparing growth amount
         sub_data = pd.DataFrame()
         sub_data1 = pd.DataFrame()
-        sub_data["iReady growth amount"] = final_merge_data["iReady WI growth amount"]
-        sub_data["growth_id"] = "FA to WI"
-        sub_data1["iReady growth amount"] = final_merge_data["iReady WI to SP growth amount"]
-        sub_data1["growth_id"] = "WI to SP"
-        data = pd.concat([sub_data, sub_data1], ignore_index=True)
+        sub_data2 = pd.DataFrame()
+        sub_data["iReady growth amount"] = final_merge_data["iReady " + term_list[1] +" growth amount"]
+        sub_data["growth_id"] = term_list[0]+" to " + term_list[1]
+        sub_data1["iReady growth amount"] = final_merge_data["iReady "+ term_list[1]+" to " + term_list[2] +" growth amount"]
+        sub_data1["growth_id"] =term_list[1]+" to " + term_list[2]
+        sub_data2["iReady growth amount"] = final_merge_data["iReady "+ term_list[0]+" to " + term_list[2] +" growth amount"]
+        sub_data2["growth_id"] = term_list[0]+" to " + term_list[2]
+
+        data = pd.concat([sub_data, sub_data1, sub_data2], ignore_index=True)
+
+        fig, ax = plt.subplots(1,2, figsize = (15,5))
+        plt.suptitle("Growth Amount Per Term Comparison", fontsize = 28,y = .95)
+        sns.boxplot(data, y = "growth_id", x = "iReady growth amount", palette=rgb_colors_custom, ax = ax[0])
+        sns.histplot(data, x = "iReady growth amount", hue = "growth_id", kde = True, color = latex_blue, ax = ax[1],palette=rgb_colors_custom, bins = 25)
+        ax[0].set_ylabel("Term")
+        ax[0].set_xlabel("iReady Score Growth Amount")
+        ax[1].set_xlabel("iReady Score Growth Amount")
+        sns.move_legend(ax[1], "best", title="Term")
+
+        fig.savefig('CummulativeGrowthComparison.png')
 
 
 
