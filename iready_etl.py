@@ -212,14 +212,14 @@ def make_figures(data_dict, final_merge_data):
     latex_blue = (0,80/256,115/256)
 
     #get current term
-    if term[len(term_list)-1] == "FA":
+    if term_list[len(term_list)-1] == "FA":
         term_label = "Fall"
-    elif term[len(term_list)-1] == "WI":
+    elif term_list[len(term_list)-1] == "WI":
         term_label = "Winter"
     else:
         term_label = "Spring"
 
-    if len(term_list == 1):
+    if len(term_list) == 1:
         # just the boxplot for score alone because there's only one term so no growth can be calculated
         fig, ax = plt.subplots(1, 2, figsize=(18, 8))
         plt.suptitle(term_label + "Scores and Overall Placement", fontsize = 28,y = .95)
@@ -233,7 +233,7 @@ def make_figures(data_dict, final_merge_data):
                 ax[1].bar_label(container, fmt='%.1f%%')
         fig.savefig('scores_and_placement.png')
 
-    elif len(term_list == 2):
+    elif len(term_list) == 2:
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
         plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
