@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 import re
 import openpyxl
 import tkinter as tk
@@ -181,9 +182,9 @@ def color_grade_level(val):
     elif val in high_grades.keys():
         return "background-color:" + high_grades.get(val) + "; color: black;"
     elif val in misc_list:
-        return';'
+        return ';'
     else:
-        return'background-color: #434544; color: #434544;'
+        return 'background-color: #434544; color: #434544;'
     
 def get_colored_spreadsheet(final_merge_data,full_file_path):
     # get the columns needed for each of the previous three functions. Used regex to identity as generally as possible
@@ -223,12 +224,12 @@ def make_figures(data_dict, final_merge_data):
         # just the boxplot for score alone because there's only one term so no growth can be calculated
         fig, ax = plt.subplots(1, 2, figsize=(18, 8))
         plt.suptitle(term_label + "Scores and Overall Placement", fontsize = 28,y = .95)
-        sns.boxplot(final_merge_data, x = "iReady" + term_list[0] + "score", color = latex_blue, ax = ax[0])
-        sns.countplot(final_merge_data, x= "iReady" + term_list[0] + "Overall Place",color = latex_blue, ax=ax[1], stat = 'percent')
+        sns.boxplot(final_merge_data, x = "iReady " + term_list[0] + " score", color = latex_blue, ax = ax[0])
+        sns.countplot(final_merge_data, x= "iReady " + term_list[0] + " Overall Place",color = latex_blue, ax=ax[1], stat = 'percent')
 
         ax[1].set_ylabel("Percentage")
-        ax[0].set_xlabel("iReady" + term_label + "Scores")
-        ax[1].set_xlabel("iReady" + term_label + "Overall Placement")
+        ax[0].set_xlabel("iReady " + term_label + " Scores")
+        ax[1].set_xlabel("iReady " + term_label + " Overall Placement")
         for container in ax[1].containers:
                 ax[1].bar_label(container, fmt='%.1f%%')
         fig.savefig('scores_and_placement.png')
@@ -237,8 +238,8 @@ def make_figures(data_dict, final_merge_data):
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
         plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
-        cat = ["iReady" + term_list[len(term_list)-1]+ "typical growth", "iReady" + term_list[len(term_list)-1] + "stretch growth"]
-        cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
+        cat = ["iReady " + term_list[len(term_list)-1]+ " typical growth", "iReady " + term_list[len(term_list)-1] + " stretch growth"]
+        cat_labels = ["iReady " + term_label+ " Typical Growth", "iReady " + term_label + " Stretch Growth"]
         count = 0
         for i in range(0,2):
             axs[i].set_xlabel(cat_labels[count])
@@ -262,8 +263,8 @@ def make_figures(data_dict, final_merge_data):
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
         plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
-        cat = ["iReady" + term_list[len(term_list)-1]+ "typical growth", "iReady" + term_list[len(term_list)-1] + "stretch growth"]
-        cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
+        cat = ["iReady " + term_list[len(term_list)-1]+ " typical growth", "iReady " + term_list[len(term_list)-1] + " stretch growth"]
+        cat_labels = ["iReady " + term_label+ " Typical Growth", "iReady " + term_label + " Stretch Growth"]
         count = 0
         for i in range(0,2):
             axs[i].set_xlabel(cat_labels[count])
@@ -333,7 +334,8 @@ def run_setup_gui():
         )
         if file_path:
             selected_files[term] = file_path
-            filename = file_path.split('/')[-1]
+            #filename = file_path.split('/')[-1]
+            filename = os.path.basename(file_path)
             term_widgets[term]["label"].config(text=f"✓ {filename}", fg="green")
         else:
             selected_files[term] = None
