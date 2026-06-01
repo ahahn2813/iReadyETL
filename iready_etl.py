@@ -211,7 +211,7 @@ def make_figures(data_dict, final_merge_data):
     palette=['#2d7d3a', '#9c0909']
     latex_blue = (0,80/256,115/256)
 
-    
+    #get current term
     if term[len(term_list)-1] == "FA":
         term_label = "Fall"
     elif term[len(term_list)-1] == "WI":
@@ -233,6 +233,25 @@ def make_figures(data_dict, final_merge_data):
                 ax[1].bar_label(container, fmt='%.1f%%')
         fig.savefig('scores_and_placement.png')
 
+    elif len(term_list == 2):
+        # first put yes and no for growth
+        fig, axs = plt.subplots(1, 2, figsize=(15, 8))
+        cat = ["iReady" + term[len(term_list)-1]+ "typical growth", "iReady" + term[len(term_list)-1] + "stretch growth"]
+        cat_labels = ["iReady" + term_label+ "Typical Growth", "iReady" + term_label + "Stretch Growth"]
+        count = 0
+        for i in range(0,2):
+            axs[i].set_xlabel(cat_labels[count])
+            sns.countplot(data=final_merge_data, x=cat[count],palette=palette, ax=axs[i], stat = "percent")
+            for container in axs[i].containers:
+                axs[i].bar_label(container, fmt='%.1f%%')
+            axs[i].set_ylabel("Percentage")
+            count +=1
+        fig.savefig('GoalsMet.png')
+        
+        # now boxplot and histogram comparing growth amount
+        sub_data = pd.DataFrame()
+        sub_data["iReady growth amount"] = final_merge_data["iReady WI growth amount"]
+        sub_data["growth_id"] = "FA to WI"
     else:
         # first put yes and no for growth
         fig, axs = plt.subplots(1, 2, figsize=(15, 8))
