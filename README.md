@@ -46,13 +46,14 @@ A single Excel file containing:
 
 ### 📊 Automatically Generated Charts
 
-The tool also generates professional visualization charts:
+The tool also generates professional visualization charts saved as PNG files:
 
-- **Goals Met Analysis**: Pie/bar charts showing the percentage of students who met typical and stretch growth goals
-- **Growth Amount Distribution**: Box plots and histograms showing score change distributions
-- **Term Comparison**: Side-by-side growth analysis comparing Fall→Winter, Winter→Spring, and Fall→Spring progress
+| Chart | Purpose | Use Case |
+|-------|---------|----------|
+| **Goals Met Analysis** ![GoalsMet](Example_Synthetic_Output/GoalsMet.png) | Shows percentage of students who met typical and stretch growth goals | Quickly see overall class/grade performance toward growth targets |
+| **Cumulative Growth Comparison** ![GrowthComparison](Example_Synthetic_Output/CumulativeGrowthComparison.png) | Box plots and histograms comparing growth amounts across terms (Fall→Winter, Winter→Spring, Fall→Spring) | Identify trends and outliers in student progress patterns across the year |
 
-All charts are automatically saved as PNG files in your output folder.
+**Example outputs from synthetic data are included** in the `Example_Synthetic_Output/` folder so you can see exactly what the tool produces before running it on your own data.
 
 ### 📁 Supported Formats
 
@@ -319,6 +320,7 @@ For questions or issues:
 2. Review the usage examples above
 3. Verify your CSV files match the iReady export format
 4. Test with the synthetic data files provided in `iReady_Data_Example_Synthetic/`
+5. View example outputs in `Example_Synthetic_Output/` to see what the tool generates
 
 ## 🎓 Acknowledgments
 
