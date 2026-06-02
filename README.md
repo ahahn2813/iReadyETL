@@ -70,11 +70,9 @@ All charts are automatically saved as PNG files in your output folder.
 3. A configuration window will open with a user-friendly GUI
 4. Select your subject (Math or Reading)
 5. Check which terms you want to process (Fall, Winter, and/or Spring)
-6. Browse and select your CSV files in order (Fall first, then Winter, then Spring if applicable)
+6. Browse and select your CSV files
 7. Choose where to save your output Excel file
 8. Done! The tool generates your Excel report and visualization charts automatically.
-
-**⚠️ Important**: File upload order matters! If you are uploading Fall and Winter, upload the Fall CSV first and Winter second. Similar order applies for Fall, Winter, and Spring (i.e., chronological order).
 
 ### 🎯 GUI Features
 
