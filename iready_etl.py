@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+import os
 import re
 import openpyxl
 import tkinter as tk
@@ -47,13 +48,11 @@ def clean_iready_math(iready_math, term):
     return iready_math
 
 # complete feature engineering: determin amount of growth, whether typical and stretch goals were met, aesthetic changes
-def merge_engineer(data_list, subject):
-    if len(data_list) == 3:
-        term_list = ["FA", "WI", "SP"]
-    elif len(data_list) == 2:
-        term_list = ["FA", "WI"]
-    else:
-        term_list = ["FA"]
+def merge_engineer(data_dict, subject):
+    data_list = list(data_dict.values())
+    term_list = list(data_dict.keys())
+    term_list = [term.upper() for term in term_list]
+
     for i in range(len(data_list)):
         if subject == "Reading":
             data_list[i] = clean_iready_read(data_list[i], term_list[i])
@@ -95,7 +94,7 @@ def merge_engineer(data_list, subject):
         final_merge = merge_spring
     elif len(term_list) == 2:
         #merge winter on all students
-        data_list[0] = data_list[0].loc[:,"spacer_0"] = "NAN"
+        data_list[0].loc[:,"spacer_0"] = "NAN"
         merge_winter = pd.merge(data_list[0].rename(columns = {"iReady_"+term_list[0]+"_student":"student"}), data_list[1].rename(columns={"iReady_"+term_list[1]+"_student":"student"}), how = "outer", on = "student")
         #feature engineer for whether met growth goals
         merge_winter.loc[merge_winter["iReady_" + term_list[1]+ "_score"]>= merge_winter["iReady_" + term_list[0]+ "_growth_score_goal"], "iReady_" + term_list[1]+ "_typical_growth"] = "YES"
@@ -183,9 +182,9 @@ def color_grade_level(val):
     elif val in high_grades.keys():
         return "background-color:" + high_grades.get(val) + "; color: black;"
     elif val in misc_list:
-        return';'
+        return ';'
     else:
-        return'background-color: #434544; color: #434544;'
+        return 'background-color: #434544; color: #434544;'
     
 def get_colored_spreadsheet(final_merge_data,full_file_path):
     # get the columns needed for each of the previous three functions. Used regex to identity as generally as possible
@@ -197,49 +196,262 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
     # Apply mapping and export
     (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
 
-# MAIN---------------------------------------------------
-def main_clean_engineering(data_list, subject, full_file_path):
-    final_merge_data = merge_engineer(data_list, subject)
-    get_colored_spreadsheet(final_merge_data, full_file_path)
+def make_figures(data_dict, final_merge_data):
+    data_list = list(data_dict.values())
+    term_list = list(data_dict.keys())
+    term_list = [term.upper() for term in term_list]
 
-# Desktop GUI----------
+    sns.set_style("darkgrid")
+    plt.rc('font', size=14)
+    plt.rc('axes', labelsize=20, titlesize=18)
+    plt.rc('legend', fontsize=14)
+    plt.rc('xtick', labelsize=14)
+    plt.rc('ytick', labelsize=12)
+    plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+    rgb_colors_custom = [(0,80/256,115/256), (255/256, 127/256, 80/256), (255/256, 192/256, 0)]
+    palette=['#2d7d3a', '#9c0909']
+    latex_blue = (0,80/256,115/256)
+
+    #get current term
+    if term_list[len(term_list)-1] == "FA":
+        term_label = "Fall"
+    elif term_list[len(term_list)-1] == "WI":
+        term_label = "Winter"
+    else:
+        term_label = "Spring"
+
+    if len(term_list) == 1:
+        # just the boxplot for score alone because there's only one term so no growth can be calculated
+        fig, ax = plt.subplots(1, 2, figsize=(18, 8))
+        plt.suptitle(term_label + "Scores and Overall Placement", fontsize = 28,y = .95)
+        sns.boxplot(final_merge_data, x = "iReady " + term_list[0] + " score", color = latex_blue, ax = ax[0])
+        sns.countplot(final_merge_data, x= "iReady " + term_list[0] + " Overall Place",color = latex_blue, ax=ax[1], stat = 'percent')
+
+        ax[1].set_ylabel("Percentage")
+        ax[0].set_xlabel("iReady " + term_label + " Scores")
+        ax[1].set_xlabel("iReady " + term_label + " Overall Placement")
+        for container in ax[1].containers:
+                ax[1].bar_label(container, fmt='%.1f%%')
+        fig.savefig('scores_and_placement.png')
+
+    elif len(term_list) == 2:
+        # first put yes and no for growth
+        fig, axs = plt.subplots(1, 2, figsize=(15, 8))
+        plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+        cat = ["iReady " + term_list[len(term_list)-1]+ " typical growth", "iReady " + term_list[len(term_list)-1] + " stretch growth"]
+        cat_labels = ["iReady " + term_label+ " Typical Growth", "iReady " + term_label + " Stretch Growth"]
+        count = 0
+        for i in range(0,2):
+            axs[i].set_xlabel(cat_labels[count])
+            sns.countplot(data=final_merge_data, x=cat[count],palette=palette, ax=axs[i], stat = "percent")
+            for container in axs[i].containers:
+                axs[i].bar_label(container, fmt='%.1f%%')
+            axs[i].set_ylabel("Percentage")
+            count +=1
+        fig.savefig('GoalsMet.png')
+        
+        # now boxplot and histogram showing growth amount
+        fig, ax = plt.subplots(1, 2, figsize=(18, 8))
+        plt.suptitle(term_list[1] + " Score Distribution and Overall Placement", fontsize = 28,y = .95)
+        sns.boxplot(final_merge_data, x = "iReady "+ term_list[1] + " growth amount", color = latex_blue, ax = ax[0])
+        sns.histplot(final_merge_data, x= "iReady "+ term_list[1] + " growth amount",kde = True, color = latex_blue, ax=ax[1], bins = 30)
+        ax[0].set_xlabel("iReady "+ term_list[1] + " Growth Amount")
+        ax[1].set_xlabel("iReady "+ term_list[1] + " Growth Amount")
+        fig.savefig('GrowthAmount.png')
+
+    else:
+        # first put yes and no for growth
+        fig, axs = plt.subplots(1, 2, figsize=(15, 8))
+        plt.suptitle("Student Growth Goals Met", fontsize = 28,y = .95)
+        cat = ["iReady " + term_list[len(term_list)-1]+ " typical growth", "iReady " + term_list[len(term_list)-1] + " stretch growth"]
+        cat_labels = ["iReady " + term_label+ " Typical Growth", "iReady " + term_label + " Stretch Growth"]
+        count = 0
+        for i in range(0,2):
+            axs[i].set_xlabel(cat_labels[count])
+            sns.countplot(data=final_merge_data, x=cat[count],palette=palette, ax=axs[i], stat = "percent")
+            for container in axs[i].containers:
+                axs[i].bar_label(container, fmt='%.1f%%')
+            axs[i].set_ylabel("Percentage")
+            count +=1
+        fig.savefig('GoalsMet.png')
+        
+        # now boxplot and histogram comparing growth amount
+        sub_data = pd.DataFrame()
+        sub_data1 = pd.DataFrame()
+        sub_data2 = pd.DataFrame()
+        sub_data["iReady growth amount"] = final_merge_data["iReady " + term_list[1] +" growth amount"]
+        sub_data["growth_id"] = term_list[0]+" to " + term_list[1]
+        sub_data1["iReady growth amount"] = final_merge_data["iReady "+ term_list[1]+" to " + term_list[2] +" growth amount"]
+        sub_data1["growth_id"] =term_list[1]+" to " + term_list[2]
+        sub_data2["iReady growth amount"] = final_merge_data["iReady "+ term_list[0]+" to " + term_list[2] +" growth amount"]
+        sub_data2["growth_id"] = term_list[0]+" to " + term_list[2]
+
+        data = pd.concat([sub_data, sub_data1, sub_data2], ignore_index=True)
+
+        fig, ax = plt.subplots(1,2, figsize = (15,5))
+        plt.suptitle("Growth Amount Per Term Comparison", fontsize = 28,y = .95)
+        sns.boxplot(data, y = "growth_id", x = "iReady growth amount", palette=rgb_colors_custom, ax = ax[0])
+        sns.histplot(data, x = "iReady growth amount", hue = "growth_id", kde = True, color = latex_blue, ax = ax[1],palette=rgb_colors_custom, bins = 25)
+        ax[0].set_ylabel("Term")
+        ax[0].set_xlabel("iReady Score Growth Amount")
+        ax[1].set_xlabel("iReady Score Growth Amount")
+        sns.move_legend(ax[1], "best", title="Term")
+
+        fig.savefig('CummulativeGrowthComparison.png')
+
+
+
+# MAIN---------------------------------------------------
+def main_clean_engineering(data_dict, subject, full_file_path):
+    final_merge_data = merge_engineer(data_dict, subject)
+    get_colored_spreadsheet(final_merge_data, full_file_path)
+    make_figures(data_dict, final_merge_data)
 
 def run_setup_gui():
     setup_window = tk.Tk()
     setup_window.title("ETL Tool Configuration")
-    setup_window.geometry("350x280")
+    setup_window.geometry("450x750")
+    
+    try:
+        setup_window.tk.call('tk', 'scaling', 2.0)
+    except:
+        pass
     
     subject_var = tk.StringVar(value="Math")
     fall_var = tk.BooleanVar(value=True)
     winter_var = tk.BooleanVar(value=False)
     spring_var = tk.BooleanVar(value=False)
     
-    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 11, "bold")).pack(pady=(10, 2))
+    selected_files = {"FALL": None, "WINTER": None, "SPRING": None}
+    term_widgets = {}
+    
+    def browse_file(term):
+        """Open file dialog for specific term"""
+        subject = subject_var.get()
+        file_path = filedialog.askopenfilename(
+            title=f"Select {term.capitalize()} {subject} Test Scores CSV",
+            filetypes=[("CSV files", "*.csv"), ("All files", "*.*")]
+        )
+        if file_path:
+            selected_files[term] = file_path
+            #filename = file_path.split('/')[-1]
+            filename = os.path.basename(file_path)
+            term_widgets[term]["label"].config(text=f"✓ {filename}", fg="green")
+        else:
+            selected_files[term] = None
+            term_widgets[term]["label"].config(text="No file selected", fg="gray")
+    
+    def update_file_section_visibility():
+        """Show/hide file selection rows based on checkbox selection"""
+        for term, var in [("FALL", fall_var), ("WINTER", winter_var), ("SPRING", spring_var)]:
+            if var.get():
+                term_widgets[term]["frame"].pack(anchor="w", padx=50, pady=8, fill="x")
+            else:
+                term_widgets[term]["frame"].pack_forget()
+                selected_files[term] = None
+    
+    # ===== SECTION 1: Subject Selection =====
+    tk.Label(setup_window, text="1. Select Subject", font=("Arial", 12, "bold")).pack(pady=(15, 5))
     subject_frame = tk.Frame(setup_window)
-    subject_frame.pack()
-    tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math").pack(side="left", padx=15)
-    tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading").pack(side="left", padx=15)
+    subject_frame.pack(pady=10)
+    tk.Radiobutton(subject_frame, text="Math", variable=subject_var, value="Math", font=("Arial", 11)).pack(side="left", padx=20)
+    tk.Radiobutton(subject_frame, text="Reading", variable=subject_var, value="Reading", font=("Arial", 11)).pack(side="left", padx=20)
     
-    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=20, pady=10)
+    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 11, "bold")).pack(pady=(0, 2))
-    tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var).pack(anchor="w", padx=60, pady=2)
-    tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var).pack(anchor="w", padx=60, pady=2)
+    # ===== SECTION 2: Term Selection =====
+    tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 12, "bold")).pack(pady=(5, 10))
+    tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
+    tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
+    tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
     
-    tk.Checkbutton(setup_window, text="Spring Scores", variable=spring_var).pack(anchor="w", padx=60, pady=2)
+    ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    config_results = {"subject": None, "terms": []}
+    # ===== SECTION 3: File Selection =====
+    tk.Label(setup_window, text="3. Select Your Files", font=("Arial", 12, "bold")).pack(pady=(5, 10))
+    
+    files_container = tk.Frame(setup_window)
+    files_container.pack(fill="both", expand=True, padx=30, pady=10)
+    
+    for term in ["FALL", "WINTER", "SPRING"]:
+        frame = tk.Frame(files_container, relief="sunken", borderwidth=1, bg="white")
+        term_widgets[term] = {"frame": frame}
+        
+        term_label = tk.Label(frame, text=f"{term.capitalize()}:", font=("Arial", 11, "bold"), width=10, anchor="w", bg="white")
+        term_label.pack(side="left", padx=10, pady=8)
+        
+        browse_btn = tk.Button(frame, text="Browse File", font=("Arial", 10), width=14, 
+                              command=lambda t=term: browse_file(t), bg="#4CAF50", fg="white")
+        browse_btn.pack(side="left", padx=5)
+        
+        status_label = tk.Label(frame, text="No file selected", font=("Arial", 9), fg="gray", anchor="w", bg="white")
+        status_label.pack(side="left", padx=10, fill="x", expand=True)
+        
+        term_widgets[term]["label"] = status_label
+    
+    config_results = {"subject": None, "terms": [], "files": selected_files}
     
     def on_submit():
+        selected_terms = []
+        if fall_var.get(): 
+            selected_terms.append("FALL")
+        if winter_var.get(): 
+            selected_terms.append("WINTER")
+        if spring_var.get(): 
+            selected_terms.append("SPRING")
+        
+        missing_files = [term for term in selected_terms if not selected_files[term]]
+        
+        if missing_files:
+            messagebox.showwarning("Missing Files", f"Please select files for: {', '.join(missing_files)}")
+            return
+        
         config_results["subject"] = subject_var.get()
-        if fall_var.get(): config_results["terms"].append("FALL")
-        if winter_var.get(): config_results["terms"].append("WINTER")
-        if spring_var.get(): config_results["terms"].append("SPRING")
+        config_results["terms"] = selected_terms
         setup_window.destroy()
 
-    tk.Button(setup_window, text="Next", command=on_submit, width=10, bg="#2196F3", fg="black").pack(pady=15)
+    tk.Button(setup_window, text="Next", command=on_submit, width=12, font=("Arial", 11, "bold"), bg="#2196F3", fg="white").pack(pady=20)
+    
+    update_file_section_visibility()
     setup_window.mainloop()
     return config_results
+
+# if __name__ == "__main__":
+#     user_config = run_setup_gui()
+
+#     if not user_config["subject"] or not user_config["terms"]:
+#         root = tk.Tk()
+#         root.withdraw()
+#         messagebox.showwarning("Cancelled", "Configuration incomplete. Exiting tool.")
+#         root.destroy()
+#         exit()
+
+#     chosen_subject = user_config["subject"]
+#     terms_to_prompt = user_config["terms"]
+    
+#     root = tk.Tk()
+#     root.withdraw()
+    
+#     try:
+#         # Use selected files directly instead of opening dialogs
+#         csv_dataframes_list = [pd.read_csv(user_config["files"][term]) for term in terms_to_prompt]
+        
+#         output_path = filedialog.asksaveasfilename(
+#             title=f"Save Final {chosen_subject} Score Report",
+#             defaultextension=".xlsx",
+#             filetypes=[("Excel files", "*.xlsx")]
+#         )
+        
+#         if output_path:
+#             main_clean_engineering(csv_dataframes_list, chosen_subject, output_path)
+#             messagebox.showinfo("Success", f"{chosen_subject} data ETL complete! Excel sheet created successfully.")
+#         else:
+#             messagebox.showwarning("Cancelled", "Export cancelled. File was not saved.")
+            
+#     except Exception as e:
+#         messagebox.showerror("Error", f"An error occurred during processing:\n{str(e)}")
+        
+#     root.destroy()
 
 if __name__ == "__main__":
     user_config = run_setup_gui()
@@ -252,25 +464,20 @@ if __name__ == "__main__":
         exit()
 
     chosen_subject = user_config["subject"]
-    terms_to_prompt = user_config["terms"]
-
+    terms_selected = user_config["terms"]
+    
     root = tk.Tk()
     root.withdraw()
-    csv_dataframes_list = []
     
     try:
-        for term in terms_to_prompt:
-            title_text = f"Select {term} {chosen_subject.upper()} Test Scores CSV"
-            path = filedialog.askopenfilename(title=title_text, filetypes=[("CSV files", "*.csv")])
-            
-            if path:
-                df = pd.read_csv(path)
-                csv_dataframes_list.append(df)
-            else:
-                messagebox.showwarning("Cancelled", f"You did not select a file for {term}. Process cancelled.")
-                root.destroy()
-                exit()
-            
+        # Create dictionary mapping term names to dataframes
+        csv_dataframes_dict = {}
+        for term in terms_selected:
+            # Map full term names to abbreviations for dictionary keys
+            term_abbrev = term[:2].lower()  # "FALL" -> "fa", "WINTER" -> "wi", "SPRING" -> "sp"
+            file_path = user_config["files"][term]
+            csv_dataframes_dict[term_abbrev] = pd.read_csv(file_path)
+        
         output_path = filedialog.asksaveasfilename(
             title=f"Save Final {chosen_subject} Score Report",
             defaultextension=".xlsx",
@@ -278,7 +485,7 @@ if __name__ == "__main__":
         )
         
         if output_path:
-            main_clean_engineering(csv_dataframes_list, chosen_subject, output_path)
+            main_clean_engineering(csv_dataframes_dict, chosen_subject, output_path)
             messagebox.showinfo("Success", f"{chosen_subject} data ETL complete! Excel sheet created successfully.")
         else:
             messagebox.showwarning("Cancelled", "Export cancelled. File was not saved.")
