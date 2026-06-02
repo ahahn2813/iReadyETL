@@ -2,7 +2,7 @@ name: Compile Windows Executable
 
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main, master ] # Triggers whenever you push changes to main or master
   workflow_dispatch:
 
 jobs:
