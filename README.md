@@ -65,7 +65,7 @@ All charts are automatically saved as PNG files in your output folder.
 
 **No Python required!**
 
-1. Download `iready_etl.exe` from this repository
+1. Download `iReady_etl_Windows_app.exe` from this repository
 2. Double-click to launch
 3. A configuration window will open with a user-friendly GUI
 4. Select your subject (Math or Reading)
