@@ -297,7 +297,7 @@ def make_figures(data_dict, final_merge_data):
         ax[1].set_xlabel("iReady Score Growth Amount")
         sns.move_legend(ax[1], "best", title="Term")
 
-        fig.savefig('CummulativeGrowthComparison.png')
+        fig.savefig('CumulativeGrowthComparison.png')
 
 
 
