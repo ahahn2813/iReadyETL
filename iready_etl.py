@@ -350,7 +350,6 @@ def run_setup_gui():
                 term_widgets[term]["frame"].pack_forget()
                 selected_files[term] = None
     
-    # ===== SECTION 1: Subject Selection =====
     tk.Label(setup_window, text="1. Select Subject", font=("Arial", 12, "bold")).pack(pady=(15, 5))
     subject_frame = tk.Frame(setup_window)
     subject_frame.pack(pady=10)
@@ -359,7 +358,6 @@ def run_setup_gui():
     
     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    # ===== SECTION 2: Term Selection =====
     tk.Label(setup_window, text="2. Select Terms to Process", font=("Arial", 12, "bold")).pack(pady=(5, 10))
     tk.Checkbutton(setup_window, text="Fall Scores", variable=fall_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
     tk.Checkbutton(setup_window, text="Winter Scores", variable=winter_var, font=("Arial", 11), command=update_file_section_visibility).pack(anchor="w", padx=80, pady=5)
@@ -367,7 +365,6 @@ def run_setup_gui():
     
     ttk.Separator(setup_window, orient='horizontal').pack(fill='x', padx=30, pady=15)
     
-    # ===== SECTION 3: File Selection =====
     tk.Label(setup_window, text="3. Select Your Files", font=("Arial", 12, "bold")).pack(pady=(5, 10))
     
     files_container = tk.Frame(setup_window)
@@ -416,42 +413,6 @@ def run_setup_gui():
     setup_window.mainloop()
     return config_results
 
-# if __name__ == "__main__":
-#     user_config = run_setup_gui()
-
-#     if not user_config["subject"] or not user_config["terms"]:
-#         root = tk.Tk()
-#         root.withdraw()
-#         messagebox.showwarning("Cancelled", "Configuration incomplete. Exiting tool.")
-#         root.destroy()
-#         exit()
-
-#     chosen_subject = user_config["subject"]
-#     terms_to_prompt = user_config["terms"]
-    
-#     root = tk.Tk()
-#     root.withdraw()
-    
-#     try:
-#         # Use selected files directly instead of opening dialogs
-#         csv_dataframes_list = [pd.read_csv(user_config["files"][term]) for term in terms_to_prompt]
-        
-#         output_path = filedialog.asksaveasfilename(
-#             title=f"Save Final {chosen_subject} Score Report",
-#             defaultextension=".xlsx",
-#             filetypes=[("Excel files", "*.xlsx")]
-#         )
-        
-#         if output_path:
-#             main_clean_engineering(csv_dataframes_list, chosen_subject, output_path)
-#             messagebox.showinfo("Success", f"{chosen_subject} data ETL complete! Excel sheet created successfully.")
-#         else:
-#             messagebox.showwarning("Cancelled", "Export cancelled. File was not saved.")
-            
-#     except Exception as e:
-#         messagebox.showerror("Error", f"An error occurred during processing:\n{str(e)}")
-        
-#     root.destroy()
 
 if __name__ == "__main__":
     user_config = run_setup_gui()

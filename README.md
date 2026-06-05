@@ -326,7 +326,7 @@ For questions or issues:
 
 Built for elementary school teachers who spend countless hours analyzing student assessment data. This tool was created to give teachers back their time.
 
-All data cleaning, merging, feature engineering, and code structure is original and created without use of AI (lines 1-210). Gemini was used to debug the GUI implementation and chart generation portions of the code.
+All data cleaning, merging, feature engineering, and code structure is original and created without use of AI (lines 1-310). Claude was used to debug the GUI implementation learn to use GitHub Actions.
 
 ---
 

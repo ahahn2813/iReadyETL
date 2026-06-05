@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest # Allocates a native Windows cloud machine to assemble your program
+    runs-on: windows-latest # Allocates a native Windows cloud machine to assemble program
 
     steps:
     - name: Checkout Repository Code
