@@ -48,6 +48,7 @@ A single Excel file containing:
 | Example Excel Screenshot Output |
 |-------|
 | <img width="1429" height="296" alt="Screenshot 2026-08-13 at 5 03 51 PM" src="https://github.com/user-attachments/assets/e3bb01a2-78db-45f9-854e-d6b06885e368" /> |
+
 **Example outputs from synthetic data are included** in the `Example_Synthetic_Output/` folder so you can see exactly what the tool produces before running it on your own data.
 
 ### 📊 Automatically Generated Charts
