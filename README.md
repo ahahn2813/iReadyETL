@@ -87,9 +87,9 @@ The new interactive configuration window makes setup simple:
 My personal machine is MacOS, but most school districts utilize Windows. Thus, the `.exe` interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS version!
 
  
-| GUI Screenshot | Use |
-|-------|-------|
-| <img width="25%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" /> | Choose the term(s) to be configured and upload the corresponding .csv files |
+| GUI Screenshot |
+|-------|
+| <img width="25%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" /> |
 
 
 ### 🛡️ Windows Defender SmartScreen Warning
