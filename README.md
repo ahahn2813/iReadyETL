@@ -88,7 +88,7 @@ My personal machine is MacOS, but most school districts utilize Windows. Thus, t
 
 | GUI Screenshot | Use|
 |-------|-------|
-| <img width="250%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" />
+| <img width="25%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" />
  | Choose the term(s) to be configured and upload the corresponding .csv files|
 
 ### 🛡️ Windows Defender SmartScreen Warning
