@@ -135,10 +135,9 @@ Want to try the tool before using your actual student data? This repository incl
 
 This is a risk-free way to explore all features without worrying about student data!
 
-| Excel Screenshot Output |
+| Example Excel Screenshot Output |
 |-------|
-| <img width="1219" height="352" alt="Screenshot 2026-08-10 at 5 21 04 PM" src="https://github.com/user-attachments/assets/89ccd97c-360b-4b2f-aa5e-3be9243d7329" />
-|
+| <img width="1219" height="352" alt="Screenshot 2026-08-10 at 5 21 04 PM" src="https://github.com/user-attachments/assets/89ccd97c-360b-4b2f-aa5e-3be9243d7329" /> |
 
 
 ## 💻 Or: Manual Installation (if you prefer)
