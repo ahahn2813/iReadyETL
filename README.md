@@ -88,7 +88,7 @@ My personal machine is MacOS, but most school districts utilize Windows. Thus, t
 
 | GUI Screenshot |
 |-------|
-| ![GoalsMet](Example_Synthetic_Output/GoalsMet.png) |
+| ![GoalsMet](Example_Synthetic_Output/GUIshot2.png) |
 
 ### 🛡️ Windows Defender SmartScreen Warning
 
