@@ -89,7 +89,7 @@ My personal machine is MacOS, but most school districts utilize Windows. Thus, t
  
 | GUI Screenshot |
 |-------|
-| <img width="25%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" /> |
+| <img width="35%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" /> |
 
 
 ### 🛡️ Windows Defender SmartScreen Warning
@@ -134,6 +134,12 @@ Want to try the tool before using your actual student data? This repository incl
 5. Review the formatted Excel report and generated charts to see how the tool works
 
 This is a risk-free way to explore all features without worrying about student data!
+
+| Excel Screenshot Output |
+|-------|
+| <img width="1219" height="352" alt="Screenshot 2026-08-10 at 5 21 04 PM" src="https://github.com/user-attachments/assets/89ccd97c-360b-4b2f-aa5e-3be9243d7329" />
+|
+
 
 ## 💻 Or: Manual Installation (if you prefer)
 
