@@ -44,6 +44,13 @@ A single Excel file containing:
   - Color-coded grade level placements for easy visual scanning
 - **Note**: This was created with fourth grade in mind (i.e., fourth grade standards are hard-coded for a school's specific abbreviations). Please reach out if you would like to use this with your grade level.
 
+### Automatically Generated Excel File
+| Example Excel Screenshot Output |
+|-------|
+| <img width="1429" height="296" alt="Screenshot 2026-08-13 at 5 03 51 PM" src="https://github.com/user-attachments/assets/e3bb01a2-78db-45f9-854e-d6b06885e368" /> |
+
+**Example outputs from synthetic data are included** in the `Example_Synthetic_Output/` folder so you can see exactly what the tool produces before running it on your own data.
+
 ### 📊 Automatically Generated Charts
 
 The tool also generates professional visualization charts saved as PNG files:
@@ -85,6 +92,12 @@ The new interactive configuration window makes setup simple:
 - Status indicators showing which files are selected
 
 My personal machine is MacOS, but most school districts utilize Windows. Thus, the `.exe` interface was configured for Windows using GitHub Actions. Please reach out if you would like the MacOS version!
+
+ 
+| GUI Screenshot |
+|-------|
+| <img width="35%" alt="GUIScreenShot" src="https://github.com/user-attachments/assets/159157fc-acbf-48c6-8420-11efc9f20721" /> |
+
 
 ### 🛡️ Windows Defender SmartScreen Warning
 
