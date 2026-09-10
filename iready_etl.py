@@ -47,7 +47,7 @@ def clean_iready_math(iready_math, term):
     iready_math = iready_math.add_prefix("iReady_" + term + "_")
     return iready_math
 
-# complete feature engineering: determin amount of growth, whether typical and stretch goals were met, aesthetic changes
+# complete feature engineering: determine amount of growth, whether typical and stretch goals were met, aesthetic changes
 def merge_engineer(data_dict, subject):
     data_list = list(data_dict.values())
     term_list = list(data_dict.keys())
