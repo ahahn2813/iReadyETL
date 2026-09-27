@@ -70,7 +70,6 @@ def merge_engineer(data_dict, subject):
         #how much up/down
         merge_winter.loc[:, "iReady_" + term_list[1]+ "_growth_amount"] = merge_winter.loc[:,"iReady_" + term_list[1]+ "_score"] - merge_winter.loc[:,"iReady_" + term_list[0]+ "_score"]
         merge_winter.loc[:,"spacer_1"] = "NAN"
-
         #merge spring on all students
         merge_spring = pd.merge(merge_winter, data_list[2].rename(columns={"iReady_"+term_list[2]+"_student":"student"}), how = "outer", on = "student")
         #feature engineer for whether met growth goals
@@ -196,11 +195,11 @@ def get_colored_spreadsheet(final_merge_data,full_file_path):
     # Apply mapping and export
     (final_merge_data.style.map(color_growth_amount, subset=list(amount_col)).map(color_growth, subset=list(growth_col)).map(color_grade_level, subset=list(grades_col)).highlight_null(color = "#434544").format(precision=0).to_excel(full_file_path, engine = "openpyxl", index = False))
 
+#creates the figures depening on whether it is fall, winter, spring, or a combination
 def make_figures(data_dict, final_merge_data):
     data_list = list(data_dict.values())
     term_list = list(data_dict.keys())
     term_list = [term.upper() for term in term_list]
-
     sns.set_style("darkgrid")
     plt.rc('font', size=14)
     plt.rc('axes', labelsize=20, titlesize=18)
@@ -307,6 +306,8 @@ def main_clean_engineering(data_dict, subject, full_file_path):
     get_colored_spreadsheet(final_merge_data, full_file_path)
     make_figures(data_dict, final_merge_data)
 
+
+#GUI set up -- used Claude in Github to help with debugging some of the GUI.
 def run_setup_gui():
     setup_window = tk.Tk()
     setup_window.title("ETL Tool Configuration")
@@ -417,6 +418,7 @@ def run_setup_gui():
 if __name__ == "__main__":
     user_config = run_setup_gui()
 
+    # Unit Test for invalid entries by user -- assertion handling
     if not user_config["subject"] or not user_config["terms"]:
         root = tk.Tk()
         root.withdraw()
